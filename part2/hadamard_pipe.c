@@ -14,7 +14,8 @@
  * 'idx': Element index (in flattened representation)
  * 'value': Element value
  */
-struct element {
+struct element
+{
     unsigned idx;
     int value;
 };
@@ -34,11 +35,13 @@ struct element {
  */
 static int worker(const int *a, const int *b, unsigned start, unsigned end, int pipe_fd);
 
-PyObject *hadamard_pipe(PyObject *self, PyObject *args) {
+PyObject *hadamard_pipe(PyObject *self, PyObject *args)
+{
     const char *mat_a_file;
     const char *mat_b_file;
     unsigned n_procs;
-    if (!PyArg_ParseTuple(args, "ssI", &mat_a_file, &mat_b_file, &n_procs)) {
+    if (!PyArg_ParseTuple(args, "ssI", &mat_a_file, &mat_b_file, &n_procs))
+    {
         // ParseTuple sets up a Python exception on our behalf
         return NULL;
     }
@@ -46,13 +49,15 @@ PyObject *hadamard_pipe(PyObject *self, PyObject *args) {
     unsigned a_rows;
     unsigned a_cols;
     int *mat_a_data = read_matrix_from_file(mat_a_file, &a_rows, &a_cols, 0);
-    if (mat_a_data == NULL) {
+    if (mat_a_data == NULL)
+    {
         return NULL;
     }
     unsigned b_rows;
     unsigned b_cols;
     int *mat_b_data = read_matrix_from_file(mat_b_file, &b_rows, &b_cols, 0);
-    if (mat_b_data == NULL) {
+    if (mat_b_data == NULL)
+    {
         free(mat_a_data);
         return NULL;
     }
@@ -72,7 +77,8 @@ PyObject *hadamard_pipe(PyObject *self, PyObject *args) {
 }
 
 // Called once by each child process
-static int worker(const int *a, const int *b, unsigned start, unsigned end, int pipe_fd) {
+static int worker(const int *a, const int *b, unsigned start, unsigned end, int pipe_fd)
+{
     /*
      * TODO Complete this function's implementation
      * Open the two matrix data files
@@ -81,6 +87,23 @@ static int worker(const int *a, const int *b, unsigned start, unsigned end, int 
      * Multiply the two elements, then send result via pipe
      * Don't forget proper error handling and cleanup!
      */
+    for (unsigned i = start; i < end; i++)
+    {
+        struct element item = {
+            .idx = i,
+            .value = a[i] * b[i]};
+
+        ssize_t amount;
+        do
+        {
+            amount = write(pipe_fd, &item, sizeof(item));
+        } while (amount == -1 && errno == EINTR);
+
+        if (amount != (ssize_t)sizeof(item))
+        {
+            return -1;
+        }
+    }
 
     return 0;
 }

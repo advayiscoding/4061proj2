@@ -1,0 +1,10 @@
+hadamard_extension.c
+hadamard_pipe.c
+hadamard_shmem.c
+hadamard_threads.c
+hadamard_utils.c
+setup.py
+hadamard.egg-info/PKG-INFO
+hadamard.egg-info/SOURCES.txt
+hadamard.egg-info/dependency_links.txt
+hadamard.egg-info/top_level.txt

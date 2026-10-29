@@ -28,7 +28,8 @@
  */
 static int worker(int *a, int *b, int *c, unsigned start, unsigned end, unsigned mapped_size);
 
-PyObject *hadamard_shmem(PyObject *self, PyObject *args) {
+PyObject *hadamard_shmem(PyObject *self, PyObject *args)
+{
     /*
      * TODO Implement this function
      * Read in arguments passed from Python
@@ -46,7 +47,8 @@ PyObject *hadamard_shmem(PyObject *self, PyObject *args) {
 }
 
 // Called once per child process
-static int worker(int *a, int *b, int *c, unsigned start, unsigned end, unsigned mapped_size) {
+static int worker(int *a, int *b, int *c, unsigned start, unsigned end, unsigned mapped_size)
+{
     /*
      * TODO Complete this function
      * Multiply each pair of elements from the assigned portion of the input
